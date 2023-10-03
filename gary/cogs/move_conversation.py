@@ -1,5 +1,19 @@
-from discord import ui, Message, Interaction, InteractionResponse, message_command, Cog, Embed, ButtonStyle, \
-    ApplicationContext, Thread, Member, User, TextChannel, VoiceChannel
+from discord import (
+    ApplicationContext,
+    ButtonStyle,
+    Cog,
+    Embed,
+    Interaction,
+    InteractionResponse,
+    Member,
+    Message,
+    TextChannel,
+    Thread,
+    User,
+    VoiceChannel,
+    message_command,
+    ui,
+)
 from discord.ui import Button, Select
 
 
@@ -26,9 +40,13 @@ class MoveConversationMenu(ui.View):
 
         await interaction.response.defer()
 
-    @ui.user_select(placeholder="Select users to notify of the move", min_values=0, max_values=5)
+    @ui.user_select(
+        placeholder="Select users to notify of the move", min_values=0, max_values=5
+    )
     async def user_select(self, select: Select, interaction: Interaction):
-        values: list[User | Member] = [val for val in select.values if isinstance(val, User | Member)]
+        values: list[User | Member] = [
+            val for val in select.values if isinstance(val, User | Member)
+        ]
 
         if len(values) != len(select.values):
             return
@@ -53,27 +71,34 @@ class MoveConversationMenu(ui.View):
         )
 
         if self.original_message.attachments:
-            from_embed.set_footer(text="Attachments were provided in the original reported_message.")
+            from_embed.set_footer(
+                text="Attachments were provided in the original reported_message."
+            )
 
         user_mentions = None
         if self.user_selection:
             user_mentions = ", ".join(
-                user.mention for user in self.user_selection if self.original_message.author != user
+                user.mention
+                for user in self.user_selection
+                if self.original_message.author != user
             )
 
         moved_message = await self.channel_selection.send(
-            content=user_mentions,
-            embed=from_embed
+            content=user_mentions, embed=from_embed
         )
 
-        await self.original_message.reply(embed=Embed(
-            title=f"✅ Moved conversation to {self.channel_selection.mention}",
-            url=moved_message.jump_url,
-        ))
+        await self.original_message.reply(
+            embed=Embed(
+                title=f"✅ Moved conversation to {self.channel_selection.mention}",
+                url=moved_message.jump_url,
+            )
+        )
 
         assert isinstance(interaction.response, InteractionResponse)
 
-        await interaction.response.edit_message(content="Moved conversation!", view=None)
+        await interaction.response.edit_message(
+            content="Moved conversation!", view=None
+        )
 
 
 class MoveConversations(Cog):
