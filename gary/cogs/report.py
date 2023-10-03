@@ -66,6 +66,7 @@ class ReportView(ui.View):
     @ui.button(label="Report", style=ButtonStyle.red, emoji="🚨")
     async def report(self, _button: ui.Button, interaction: Interaction):
         assert interaction.user is not None
+        assert isinstance(interaction.response, InteractionResponse)
 
         if not self.rule_violations:
             return
@@ -105,6 +106,11 @@ class ReportView(ui.View):
                     ],
                 ),
             ]
+        )
+
+        await interaction.response.edit_message(
+            content="You report has been sent. Thank you for helping keep the server safe!",
+            view=None,
         )
 
 
