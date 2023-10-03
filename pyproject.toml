@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "gary"
+version = "0.1.0"
+description = ""
+authors = ["Cypheriel <61402923+Cypheriel@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+mypy = "^1.5.1"
+rich = "^13.6.0"
+python-dotenv = "^1.0.0"
+py-cord = "^2.4.1"
+aiohttp = {extras = ["speedups"], version = "^3.8.5"}
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.9.1"
+flake8 = "^6.1.0"
+bandit = "^1.7.5"
+pre-commit = "^3.4.0"
+codespell = "^2.2.6"
+tomli = "^2.0.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
