@@ -102,7 +102,7 @@ class ReportView(ui.View):
                     title=f"Alleged Rule Violations",
                     fields=[
                         EmbedField(name=f"Rule #{i}", value=RULES[i - 1], inline=False)
-                        for i in self.rule_violations
+                        for i in sorted(self.rule_violations)
                     ],
                 ),
             ]
