@@ -56,8 +56,7 @@ class MoveConversationMenu(ui.View):
             val for val in select.values if isinstance(val, User | Member)
         ]
 
-        if len(values) != len(select.values):
-            return
+        assert len(values) != len(select.values)
 
         self.user_selection = values
 
@@ -70,8 +69,7 @@ class MoveConversationMenu(ui.View):
             return
 
         original_channel = self.original_message.channel
-        if not isinstance(original_channel, TextChannel | Thread | VoiceChannel):
-            return
+        assert isinstance(original_channel, TextChannel | Thread | VoiceChannel)
 
         from_embed = Embed(
             title=f"From {original_channel.mention}",
