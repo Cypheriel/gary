@@ -1105,10 +1105,6 @@ nbdist/
 *.tmproject
 tmtags
 
-### ModelSim template
-# ignore ModelSim generated files and directories (temp files and so on)
-[_@]*
-
 # ignore compilation output of ModelSim
 *.mti
 *.dat
@@ -1182,5 +1178,3 @@ abstract.record*
 
 ### GPG template
 secring.*
-
-
