@@ -1,3 +1,4 @@
+"""Module containing the Report cog and related functionality."""
 from discord import (
     ApplicationContext,
     ButtonStyle,
@@ -37,9 +38,14 @@ RULES_OPTIONS = [
 
 
 class ReportView(ui.View):
+    """A view containing the UI elements and logic for reporting a user or message."""
+
     def __init__(
-        self, reported_message: Message | None = None, user: User | Member | None = None
+        self,
+        reported_message: Message | None = None,
+        user: User | Member | None = None,
     ):
+        """Create a new ReportView instance tied to a specific message or user."""
         super().__init__()
 
         self.rule_violations: list[int] | None = None
@@ -57,6 +63,7 @@ class ReportView(ui.View):
         options=RULES_OPTIONS,
     )
     async def rule_violations_select(self, select: ui.Select, interaction: Interaction):
+        """Present a rule violation selection menu for the user."""
         assert isinstance(interaction.response, InteractionResponse)
         self.rule_violations = [
             int(val) for val in select.values if isinstance(val, str) and val.isdigit()
@@ -65,6 +72,7 @@ class ReportView(ui.View):
 
     @ui.button(label="Report", style=ButtonStyle.red, emoji="🚨")
     async def report(self, _button: ui.Button, interaction: Interaction):
+        """Report the user or message upon press."""
         assert interaction.user is not None
         assert isinstance(interaction.response, InteractionResponse)
 
@@ -77,18 +85,25 @@ class ReportView(ui.View):
 
         report_channel = guild.get_channel_or_thread(1158655735413084231)
         if not report_channel or isinstance(
-            report_channel, StageChannel | ForumChannel | CategoryChannel
+            report_channel,
+            StageChannel | ForumChannel | CategoryChannel,
         ):
             return
 
         await report_channel.send(
             embeds=[
                 Embed(
-                    title=f"Report",
+                    title="Report",
                     fields=[
-                        EmbedField(name="User", value=self.user.mention, inline=True),
                         EmbedField(
-                            name="Reporter", value=interaction.user.mention, inline=True
+                            name="User",
+                            value=self.user.mention,
+                            inline=True,
+                        ),
+                        EmbedField(
+                            name="Reporter",
+                            value=interaction.user.mention,
+                            inline=True,
                         ),
                         EmbedField(
                             name="Message",
@@ -99,13 +114,13 @@ class ReportView(ui.View):
                     ],
                 ),
                 Embed(
-                    title=f"Alleged Rule Violations",
+                    title="Alleged Rule Violations",
                     fields=[
                         EmbedField(name=f"Rule #{i}", value=RULES[i - 1], inline=False)
                         for i in sorted(self.rule_violations)
                     ],
                 ),
-            ]
+            ],
         )
 
         await interaction.response.edit_message(
@@ -115,12 +130,21 @@ class ReportView(ui.View):
 
 
 class Report(Cog):
+    """A cog containing commands for reporting users and messages."""
+
     @message_command()
     async def report_message(self, ctx: ApplicationContext, message: Message):
+        """Present a report view for the given message."""
         await ctx.send_response(
-            view=ReportView(reported_message=message), ephemeral=True
+            view=ReportView(reported_message=message),
+            ephemeral=True,
         )
 
     @user_command()
     async def report_user(self, ctx: ApplicationContext, user: User):
+        """Present a report view for the given user."""
+        await ctx.send_response(
+            view=ReportView(user=user),
+            ephemeral=True,
+        )
         await ctx.send_response(view=ReportView(user=user), ephemeral=True)

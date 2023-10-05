@@ -1,3 +1,4 @@
+"""Module containing the MoveConversations cog and related functionality."""
 from discord import (
     ApplicationContext,
     ButtonStyle,
@@ -18,7 +19,10 @@ from discord.ui import Button, Select
 
 
 class MoveConversationMenu(ui.View):
+    """A view containing the UI elements and logic for moving a conversation."""
+
     def __init__(self, original_message: Message):
+        """Create a new MoveConversationMenu instance tied to a specific message."""
         super().__init__()
 
         self.channel_selection: TextChannel | Thread | VoiceChannel | None = None
@@ -28,6 +32,7 @@ class MoveConversationMenu(ui.View):
 
     @ui.channel_select()
     async def channel_select(self, select: Select, interaction: Interaction):
+        """Present a channel selection menu for the channel to move a conversation to the user."""
         assert isinstance(interaction.response, InteractionResponse)
 
         if len(select.values) != 1:
@@ -41,9 +46,12 @@ class MoveConversationMenu(ui.View):
         await interaction.response.defer()
 
     @ui.user_select(
-        placeholder="Select users to notify of the move", min_values=0, max_values=5
+        placeholder="Select users to notify of the move",
+        min_values=0,
+        max_values=5,
     )
     async def user_select(self, select: Select, interaction: Interaction):
+        """Present a user selection menu for the users to notify of the move."""
         values: list[User | Member] = [
             val for val in select.values if isinstance(val, User | Member)
         ]
@@ -57,6 +65,7 @@ class MoveConversationMenu(ui.View):
 
     @ui.button(label="Move conversation", style=ButtonStyle.green)
     async def move_conversation(self, _button: Button, interaction: Interaction):
+        """Move the conversation to the selected channel upon press."""
         if not self.channel_selection:
             return
 
@@ -72,7 +81,7 @@ class MoveConversationMenu(ui.View):
 
         if self.original_message.attachments:
             from_embed.set_footer(
-                text="Attachments were provided in the original reported_message."
+                text="Attachments were provided in the original reported_message.",
             )
 
         user_mentions = None
@@ -84,24 +93,29 @@ class MoveConversationMenu(ui.View):
             )
 
         moved_message = await self.channel_selection.send(
-            content=user_mentions, embed=from_embed
+            content=user_mentions,
+            embed=from_embed,
         )
 
         await self.original_message.reply(
             embed=Embed(
                 title=f"✅ Moved conversation to {self.channel_selection.mention}",
                 url=moved_message.jump_url,
-            )
+            ),
         )
 
         assert isinstance(interaction.response, InteractionResponse)
 
         await interaction.response.edit_message(
-            content="Moved conversation!", view=None
+            content="Moved conversation!",
+            view=None,
         )
 
 
 class MoveConversations(Cog):
+    """A cog containing context menu command for moving conversations."""
+
     @message_command()
     async def move_conversation(self, ctx: ApplicationContext, message: Message):
+        """Present the move conversation menu to the user."""
         await ctx.respond(view=MoveConversationMenu(message), ephemeral=True)
