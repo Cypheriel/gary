@@ -1,17 +1,18 @@
 """The entrypoint for the bot."""
+from logging import getLogger
 from os import getenv
 from pathlib import Path
 
 from discord.ext import commands
 from dotenv import load_dotenv
 from mypy import api as mypy_api
-from rich.console import Console
 
 from gary.cogs import load_cogs
+from gary.logging import setup_logging
 
 load_dotenv()
 
-console = Console()
+logger = getLogger(__name__)
 bot = commands.Bot()
 
 
@@ -22,30 +23,35 @@ async def on_ready():
 
     Additionally signal to Pterodactyl that the bot has started and is running.
     """
-    console.print("[bold green]Bot is ready![/]")
+    if cog_count := len(bot.cogs):
+        logger.info(f"[cyan]Loaded {cog_count} cog_count[/]")
+
+    if command_count := len(bot.commands):
+        logger.info(f"[cyan]Loaded {command_count} commands[/]")
+
+    if application_command_count := len(bot.application_commands) - command_count:
+        logger.info(f"[cyan]Loaded {application_command_count} application commands[/]")
+
+    logger.info("[bold green]Bot is ready![/]")
     await bot.sync_commands()
 
 
 if __name__ == "__main__":
-    console.print("[bold]Running mypy...[/bold]", end="\n\n")
+    setup_logging()
+
+    logger.info("Running type-checker...")
     result = mypy_api.run([str(Path(__file__).parent)])
 
     if stdout := result[0]:
-        console.print(f"[yellow]Type-checking report[/]:\n\t{stdout}")
+        logger.info(f"[yellow]Type-checking report[/]:\n{stdout.strip()}")
 
     if stderr := result[1]:
-        console.print(f"[bold red]Error report[/]:\n{stderr}")
+        logger.error(stderr)
 
     if (exit_code := result[2]) != 0:
-        console.print(f"[bold red]Exited with exit code [bright_red]{exit_code}[/][/]")
+        logger.debug(f"[bold red]Exited with exit code [bright_red]{exit_code}[/][/]")
         exit(exit_code)
 
     load_cogs(bot)
-    console.print()
-    console.print(f"[cyan]Loaded {len(bot.cogs)} cogs[/]")
-    console.print(f"[cyan]Loaded {len(bot.commands)} commands[/]")
-    console.print(
-        f"[cyan]Loaded {len(bot.all_commands)} application commands[/]",
-        end="\n\n",
-    )
+
     bot.run(getenv("TOKEN"))
