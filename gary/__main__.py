@@ -10,9 +10,10 @@ from mypy import api as mypy_api
 from gary.cogs import load_cogs
 from gary.logging import setup_logging
 
+setup_logging()
 load_dotenv()
 
-logger = getLogger(__name__)
+logger = getLogger("gary")
 bot = commands.Bot()
 
 
@@ -37,8 +38,6 @@ async def on_ready():
 
 
 if __name__ == "__main__":
-    setup_logging()
-
     logger.info("Running type-checker...")
     result = mypy_api.run([str(Path(__file__).parent)])
 
