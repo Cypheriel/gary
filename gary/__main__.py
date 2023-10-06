@@ -24,7 +24,7 @@ async def on_ready():
     Additionally signal to Pterodactyl that the bot has started and is running.
     """
     if cog_count := len(bot.cogs):
-        logger.info(f"[cyan]Loaded {cog_count} cog_count[/]")
+        logger.info(f"[cyan]Loaded {cog_count} cogs[/]")
 
     if command_count := len(bot.commands):
         logger.info(f"[cyan]Loaded {command_count} commands[/]")
