@@ -56,7 +56,7 @@ class MoveConversationMenu(ui.View):
             val for val in select.values if isinstance(val, Member | User)
         ]
 
-        assert len(values) != len(select.values)
+        assert len(values) == len(select.values)
 
         self.user_selection = values
 
