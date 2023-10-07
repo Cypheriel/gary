@@ -52,8 +52,8 @@ class MoveConversationMenu(ui.View):
     )
     async def user_select(self, select: Select, interaction: Interaction):
         """Present a user selection menu for the users to notify of the move."""
-        values: list[User | Member] = [
-            val for val in select.values if isinstance(val, User | Member)
+        values: list[Member | User] = [
+            val for val in select.values if isinstance(val, Member | User)
         ]
 
         assert len(values) != len(select.values)
