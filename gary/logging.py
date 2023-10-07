@@ -1,6 +1,8 @@
 """Module responsible for initialising logging for the bot."""
 import logging
+from os import environ
 
+from rich.console import Console
 from rich.logging import RichHandler
 
 
@@ -13,7 +15,13 @@ def setup_logging() -> None:
         format="%(message)s",
         datefmt="[%X]",
         handlers=[
-            RichHandler(markup=True, rich_tracebacks=True),
+            RichHandler(
+                console=Console(
+                    width=123 if environ.get("USER") == "container" else None,
+                ),
+                markup=True,
+                rich_tracebacks=True,
+            ),
         ],
         force=True,
     )
