@@ -31,10 +31,7 @@ RULES: list[str] = [
     "Do not post content or messages that are politically, religiously, or otherwise controversial in nature.",
 ]
 
-RULES_OPTIONS = [
-    SelectOption(label=f"Rule #{i} — {rule}"[:100], value=str(i))
-    for i, rule in enumerate(RULES, start=1)
-]
+RULES_OPTIONS = [SelectOption(label=f"Rule #{i} — {rule}"[:100], value=str(i)) for i, rule in enumerate(RULES, start=1)]
 
 
 class ReportView(ui.View):
@@ -65,9 +62,7 @@ class ReportView(ui.View):
     async def rule_violations_select(self, select: ui.Select, interaction: Interaction):
         """Present a rule violation selection menu for the user."""
         assert isinstance(interaction.response, InteractionResponse)
-        self.rule_violations = [
-            int(val) for val in select.values if isinstance(val, str) and val.isdigit()
-        ]
+        self.rule_violations = [int(val) for val in select.values if isinstance(val, str) and val.isdigit()]
         await interaction.response.defer()
 
     @ui.button(label="Report", style=ButtonStyle.red, emoji="🚨")
