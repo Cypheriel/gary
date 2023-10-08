@@ -127,4 +127,8 @@ class MoveConversations(Cog):
     @message_command()
     async def move_conversation(self, ctx: ApplicationContext, message: Message):
         """Present the move conversation menu to the user."""
+        if message.author == ctx.bot.user:
+            await ctx.respond(content="I can't move my own messages!", ephemeral=True)
+            return
+
         await ctx.respond(view=MoveConversationMenu(message), ephemeral=True)
