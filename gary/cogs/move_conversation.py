@@ -52,9 +52,7 @@ class MoveConversationMenu(ui.View):
     )
     async def user_select(self, select: Select, interaction: Interaction):
         """Present a user selection menu for the users to notify of the move."""
-        values: list[Member | User] = [
-            val for val in select.values if isinstance(val, Member | User)
-        ]
+        values: list[Member | User] = [val for val in select.values if isinstance(val, Member | User)]
 
         assert len(values) == len(select.values)
 
@@ -71,23 +69,36 @@ class MoveConversationMenu(ui.View):
         original_channel = self.original_message.channel
         assert isinstance(original_channel, TextChannel | Thread | VoiceChannel)
 
+        description = (
+            f"{self.original_message.author.mention}: {self.original_message.content[:1_500]}"
+            if self.original_message.content
+            else None
+        )
+
         from_embed = Embed(
             title=f"From {original_channel.mention}",
-            description=f"{self.original_message.author.mention}: {self.original_message.content[:1_500]}",
+            description=description,
             url=self.original_message.jump_url,
         )
 
-        if self.original_message.attachments:
+        if attachments := self.original_message.attachments:
+            s = "s" if len(attachments) != 1 else ""
+            were = "were" if s else "was"
             from_embed.set_footer(
-                text="Attachments were provided in the original reported_message.",
+                text=f"Attachment{s} {were} provided in the original message.",
+            )
+
+        if self.original_message.embeds:
+            s = "s" if len(self.original_message.embeds) != 1 else ""
+            were = "were" if s else "was"
+            from_embed.set_footer(
+                text=f"Embed{s} {were} provided in the original message.",
             )
 
         user_mentions = None
         if self.user_selection:
             user_mentions = ", ".join(
-                user.mention
-                for user in self.user_selection
-                if self.original_message.author != user
+                user.mention for user in self.user_selection if self.original_message.author != user
             )
 
         moved_message = await self.channel_selection.send(
