@@ -54,10 +54,6 @@ class PrecisionMassActions(Cog):
             await ctx.respond("Please set both positions first", ephemeral=True)
             return
 
-        if positions[0].channel != positions[1].channel:
-            await ctx.respond("Please select two messages from the same channel!", ephemeral=True)
-            return
-
         assert isinstance(positions[0], Message)
         assert isinstance(positions[1], Message)
 
