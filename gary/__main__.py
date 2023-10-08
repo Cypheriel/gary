@@ -3,7 +3,8 @@ from logging import getLogger
 from os import getenv
 from pathlib import Path
 
-from discord.ext import commands
+from discord import Intents
+from discord.ext.commands import Bot
 from dotenv import load_dotenv
 from mypy import api as mypy_api
 
@@ -14,7 +15,7 @@ setup_logging()
 load_dotenv()
 
 logger = getLogger("gary")
-bot = commands.Bot()
+bot = Bot(intents=Intents.all())
 
 
 @bot.event
