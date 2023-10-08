@@ -21,19 +21,26 @@ class PrecisionMassActions(Cog):
 
         self.bot = bot
 
-        self.positions: list[Message | None] = [None, None]
+        self.positions: dict[int, list[Message | None]] = {}
 
     @message_command(name="Set position — 1")
     async def set_mass_delete_position_1(self, ctx: ApplicationContext, message: Message):
         """Set the first position of a mass action."""
-        self.positions[0] = message
+        if self.positions.get(ctx.user.id) is None:
+            self.positions[ctx.user.id] = [message, None]
+
+        else:
+            self.positions[ctx.user.id][0] = message
 
         await ctx.respond("Set position 1", ephemeral=True)
 
     @message_command(name="Set position — 2")
     async def set_mass_delete_position_2(self, ctx: ApplicationContext, message: Message):
         """Set the second position of a mass action."""
-        self.positions[1] = message
+        if self.positions.get(ctx.user.id) is None:
+            self.positions[ctx.user.id] = [None, message]
+        else:
+            self.positions[ctx.user.id][1] = message
 
         await ctx.respond("Set position 2", ephemeral=True)
 
@@ -41,15 +48,17 @@ class PrecisionMassActions(Cog):
     @default_permissions(manage_messages=True)
     async def delete(self, ctx: ApplicationContext):
         """Delete all messages between the two positions."""
-        if None in self.positions:
+        positions = self.positions.get(ctx.user.id, [None, None])
+
+        if positions is None or None in positions:
             await ctx.respond("Please set both positions first", ephemeral=True)
             return
 
-        assert isinstance(self.positions[0], Message)
-        assert isinstance(self.positions[1], Message)
+        assert isinstance(positions[0], Message)
+        assert isinstance(positions[1], Message)
 
-        position_1: Message = self.positions[0]
-        position_2: Message = self.positions[1]
+        position_1: Message = positions[0]
+        position_2: Message = positions[1]
 
         if position_1.created_at > position_2.created_at:
             position_1, position_2 = position_2, position_1
