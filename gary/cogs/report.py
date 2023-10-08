@@ -65,7 +65,7 @@ class ReportView(ui.View):
         self.rule_violations = [int(val) for val in select.values if isinstance(val, str) and val.isdigit()]
         await interaction.response.defer()
 
-    @ui.button(label="Report", style=ButtonStyle.red, emoji="🚨")
+    @ui.button(label="Report", style=ButtonStyle.red)
     async def report(self, _button: ui.Button, interaction: Interaction):
         """Report the user or message upon press."""
         assert interaction.user is not None
