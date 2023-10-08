@@ -108,7 +108,7 @@ class MoveConversationMenu(ui.View):
 
         await self.original_message.reply(
             embed=Embed(
-                title=f"✅ Moved conversation to {self.channel_selection.mention}",
+                title=f"➡️ Moved conversation to {self.channel_selection.mention}",
                 url=moved_message.jump_url,
             ),
         )
