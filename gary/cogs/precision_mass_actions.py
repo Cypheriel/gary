@@ -61,16 +61,20 @@ class PrecisionMassActions(Cog):
         assert isinstance(positions[0], Message)
         assert isinstance(positions[1], Message)
 
-        position_1: Message = positions[0]
-        position_2: Message = positions[1]
+        if positions[0].channel != positions[1].channel:
+            await ctx.respond("Please select two messages from the same channel!", ephemeral=True)
+            return
 
-        if position_1.created_at > position_2.created_at:
-            position_1, position_2 = position_2, position_1
+        if positions[0].created_at > positions[1].created_at:
+            positions[0], positions[1] = positions[1], positions[0]
 
-        messages = await ctx.channel.history(
-            after=position_1,
-            before=position_2,
-        ).flatten() + [position_1, position_2]
+        messages = (
+            await ctx.channel.history(
+                after=positions[0],
+                before=positions[1],
+            ).flatten()
+            + positions
+        )
 
         if len(messages) < 2:
             await ctx.respond("Please select more than one message!", ephemeral=True)
