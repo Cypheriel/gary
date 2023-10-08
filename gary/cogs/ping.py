@@ -1,5 +1,5 @@
 """Module containing the Ping cog."""
-from discord import ApplicationContext, slash_command
+from discord import ApplicationContext, Bot, slash_command
 from discord.ext.commands import Cog
 
 
@@ -13,3 +13,8 @@ class Ping(Cog):
         await ctx.trigger_typing()
 
         await ctx.respond(f"Pong! Latency: {latency:.2f}ms")
+
+
+def setup(bot: Bot):
+    """Add the cog to the bot."""
+    bot.add_cog(Ping(bot))

@@ -1,6 +1,7 @@
 """Module containing the MoveConversations cog and related functionality."""
 from discord import (
     ApplicationContext,
+    Bot,
     ButtonStyle,
     ChannelType,
     Cog,
@@ -197,3 +198,8 @@ class MoveConversations(Cog):
             return
 
         await ctx.respond(view=MoveConversationMenu(message), ephemeral=True)
+
+
+def setup(bot: Bot):
+    """Add the MoveConversations cog to the bot."""
+    bot.add_cog(MoveConversations(bot))

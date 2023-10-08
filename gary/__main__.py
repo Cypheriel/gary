@@ -8,7 +8,6 @@ from discord.ext.commands import Bot
 from dotenv import load_dotenv
 from mypy import api as mypy_api
 
-from gary.cogs import load_cogs
 from gary.logging import setup_logging
 
 setup_logging()
@@ -16,6 +15,13 @@ load_dotenv()
 
 logger = getLogger("gary")
 bot = Bot(intents=Intents.all())
+
+COGS: list[str] = [
+    "ping",
+    "move_conversation",
+    "report",
+    "precision_mass_actions",
+]
 
 
 @bot.event
@@ -38,7 +44,6 @@ async def on_ready():
         logger.info(f"[cyan]Loaded {application_command_count} application command{s}[/]")
 
     logger.info("[bold green]Bot is ready![/]")
-    await bot.sync_commands()
 
 
 if __name__ == "__main__":
@@ -55,6 +60,8 @@ if __name__ == "__main__":
         logger.debug(f"[bold red]Exited with exit code [bright_red]{exit_code}[/][/]")
         exit(exit_code)
 
-    load_cogs(bot)
+    for cog in COGS:
+        logger.info(f"[cyan]Loading the [bright_cyan]{cog.replace('_', ' ').title()}[/] cog...[/]")
+        bot.load_extension(f"gary.cogs.{cog}")
 
     bot.run(getenv("TOKEN"))

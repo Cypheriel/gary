@@ -1,6 +1,7 @@
 """Module containing the Report cog and related functionality."""
 from discord import (
     ApplicationContext,
+    Bot,
     ButtonStyle,
     CategoryChannel,
     Embed,
@@ -142,3 +143,8 @@ class Report(Cog):
             view=ReportView(user=user),
             ephemeral=True,
         )
+
+
+def setup(bot: Bot):
+    """Set up the Report cog."""
+    bot.add_cog(Report(bot))
