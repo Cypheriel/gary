@@ -56,7 +56,7 @@ class ReportView(ui.View):
     @ui.string_select(
         placeholder="Select rule violation(s)",
         min_values=1,
-        max_values=9,
+        max_values=len(RULES),
         options=RULES_OPTIONS,
     )
     async def rule_violations_select(self, select: ui.Select, interaction: Interaction):
