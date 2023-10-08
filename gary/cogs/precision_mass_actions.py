@@ -15,7 +15,7 @@ class PrecisionMassActions(Cog):
 
     pma_group = SlashCommandGroup(name="pma", description="Precision mass actions")
 
-    def __init__(self, bot: Bot):
+    def __init__(self: "PrecisionMassActions", bot: Bot) -> None:
         """Initialize the cog."""
         super().__init__()
 
@@ -24,7 +24,11 @@ class PrecisionMassActions(Cog):
         self.positions: dict[int, list[Message | None]] = {}
 
     @message_command(name="Set position — 1")
-    async def set_mass_delete_position_1(self, ctx: ApplicationContext, message: Message):
+    async def set_mass_delete_position_1(
+        self: "PrecisionMassActions",
+        ctx: ApplicationContext,
+        message: Message,
+    ) -> None:
         """Set the first position of a mass action."""
         if self.positions.get(ctx.user.id) is None:
             self.positions[ctx.user.id] = [message, None]
@@ -35,7 +39,11 @@ class PrecisionMassActions(Cog):
         await ctx.respond("Set position 1", ephemeral=True)
 
     @message_command(name="Set position — 2")
-    async def set_mass_delete_position_2(self, ctx: ApplicationContext, message: Message):
+    async def set_mass_delete_position_2(
+        self: "PrecisionMassActions",
+        ctx: ApplicationContext,
+        message: Message,
+    ) -> None:
         """Set the second position of a mass action."""
         if self.positions.get(ctx.user.id) is None:
             self.positions[ctx.user.id] = [None, message]
@@ -46,7 +54,7 @@ class PrecisionMassActions(Cog):
 
     @pma_group.command()
     @default_permissions(manage_messages=True)
-    async def delete(self, ctx: ApplicationContext):
+    async def delete(self: "PrecisionMassActions", ctx: ApplicationContext) -> None:
         """Delete all messages between the two positions."""
         positions = self.positions.get(ctx.user.id, [None, None])
 
@@ -72,7 +80,7 @@ class PrecisionMassActions(Cog):
             + positions
         )
 
-        if len(messages) < 2:
+        if len(messages) > 1:
             await ctx.respond("Please select more than one message!", ephemeral=True)
             return
 
@@ -81,6 +89,6 @@ class PrecisionMassActions(Cog):
         await ctx.respond(f"✅ Deleted {len(messages)} messages.", ephemeral=True)
 
 
-def setup(bot: Bot):
+def setup(bot: Bot) -> None:
     """Set up the cog."""
     bot.add_cog(PrecisionMassActions(bot))

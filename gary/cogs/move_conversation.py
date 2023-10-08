@@ -1,4 +1,5 @@
 """Module containing the MoveConversations cog and related functionality."""
+
 from discord import (
     ApplicationContext,
     Bot,
@@ -23,18 +24,17 @@ from discord.ui import Select
 class MoveConversationButton(ui.Button):
     """A button for moving a conversation."""
 
-    def __init__(self, menu: "MoveConversationMenu", *args, **kwargs):
+    def __init__(self: "MoveConversationButton", menu: "MoveConversationMenu", disabled: bool = True) -> None:
         """Create a new MoveConversationButton instance tied to the MoveConversationMenu."""
         super().__init__(
             label="Move conversation",
             style=ButtonStyle.primary,
-            *args,
-            **kwargs,
+            disabled=disabled,
         )
 
         self.menu = menu
 
-    async def callback(self, interaction: Interaction):
+    async def callback(self: "MoveConversationButton", interaction: Interaction) -> None:
         """Move the conversation to the selected channel upon press."""
         if not self.menu.channel_selection:
             return
@@ -98,12 +98,12 @@ class MoveConversationMenu(ui.View):
     """A view containing the UI elements and logic for moving a conversation."""
 
     @property
-    def valid(self):
+    def valid(self: "MoveConversationMenu") -> bool:
         """Return whether the current selection is valid."""
         return self._valid
 
     @valid.setter
-    def valid(self, value):
+    def valid(self: "MoveConversationMenu", value: bool) -> None:
         """Reset the button's disabled state based on the validity of the current selection."""
         self._valid = value
 
@@ -111,7 +111,7 @@ class MoveConversationMenu(ui.View):
         self.button.disabled = not value
         self.add_item(self.button)
 
-    def __init__(self, original_message: Message):
+    def __init__(self: "MoveConversationMenu", original_message: Message) -> None:
         """Create a new MoveConversationMenu instance tied to a specific message."""
         super().__init__()
 
@@ -124,7 +124,7 @@ class MoveConversationMenu(ui.View):
         self.add_item(self.button)
 
     @ui.channel_select(channel_types=[ChannelType.text, ChannelType.voice, ChannelType.public_thread])
-    async def channel_select(self, select: Select, interaction: Interaction):
+    async def channel_select(self: "MoveConversationMenu", select: Select, interaction: Interaction) -> None:
         """Present a channel selection menu for the channel to move a conversation to the user."""
         assert isinstance(interaction.response, InteractionResponse)
 
@@ -169,14 +169,12 @@ class MoveConversationMenu(ui.View):
 
         self.channel_selection = channel
 
-        # await interaction.response.defer()
-
     @ui.user_select(
         placeholder="Select users to notify of the move",
         min_values=0,
         max_values=5,
     )
-    async def user_select(self, select: Select, interaction: Interaction):
+    async def user_select(self: "MoveConversationMenu", select: Select, interaction: Interaction) -> None:
         """Present a user selection menu for the users to notify of the move."""
         values: list[Member | User] = [val for val in select.values if isinstance(val, Member | User)]
 
@@ -190,8 +188,9 @@ class MoveConversationMenu(ui.View):
 class MoveConversations(Cog):
     """A cog containing context menu command for moving conversations."""
 
+    @staticmethod
     @message_command(name="Move conversation")
-    async def move_conversation(self, ctx: ApplicationContext, message: Message):
+    async def move_conversation(ctx: ApplicationContext, message: Message) -> None:
         """Present the move conversation menu to the user."""
         if message.author == ctx.bot.user:
             await ctx.respond(content="I can't move my own messages!", ephemeral=True)
@@ -200,6 +199,6 @@ class MoveConversations(Cog):
         await ctx.respond(view=MoveConversationMenu(message), ephemeral=True)
 
 
-def setup(bot: Bot):
+def setup(bot: Bot) -> None:
     """Add the MoveConversations cog to the bot."""
     bot.add_cog(MoveConversations(bot))

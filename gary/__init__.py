@@ -1,1 +1,1 @@
-"""This package contains all the code related to the Gary bot."""
+"""Package contains all the code related to the Gary bot."""

@@ -11,30 +11,66 @@ mypy = "^1.5.1"
 rich = "^13.6.0"
 python-dotenv = "^1.0.0"
 py-cord = "^2.4.1"
-aiohttp = {extras = ["speedups"], version = "^3.8.5"}
+aiohttp = {extras = ["speedups"], version = "^3.8.6"}
 
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.9.1"
-flake8 = "^6.1.0"
 bandit = "^1.7.5"
 pre-commit = "^3.4.0"
-codespell = "^2.2.6"
 tomli = "^2.0.1"
 isort = "^5.12.0"
-flake8-builtins = "^2.1.0"
-flake8-commas = "^2.1.0"
-flake8-comprehensions = "^3.14.0"
-flake8-warnings = "^0.4.1"
-flake8-useless-assert = "^0.4.4"
-flake8-async = "^22.11.14"
-flake8-simplify = "^0.21.0"
-flake8-docstrings = "^1.7.0"
-flake8-broken-line = "^1.0.0"
-flake8-printf-formatting = "^1.1.2"
-flake8-todo = "^0.7"
-flake8-markdown = "^0.5.0"
+ruff = "^0.0.292"
+
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 120
+
+[tool.ruff]
+line-length = 120
+select = [
+    "F",
+    "W",
+    "E",
+    "C90",
+    "I",
+    "N",
+    "D",
+    "UP",
+    "ANN",
+    "ASYNC",
+    "S",
+    "BLE",
+    "B",
+    "A",
+    "COM",
+    "C4",
+    "ISC",
+    "ICN",
+    # "G",
+    "INP",
+    "PIE",
+    "T20",
+    "PYI",
+    "Q",
+    "RET",
+    "SLF",
+    "SIM",
+    "ARG",
+    "ERA",
+    "PGH",
+    "PL",
+    "PERF",
+    "FURB",
+    "LOG",
+    "RUF",
+]
+ignore = [
+    "D203",  # 1 blank line required before class docstring
+    "D212",  # Multi-line docstring summary should start at the first line
+    "S101",  # Use of assert detected.
+]

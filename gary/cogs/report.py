@@ -39,10 +39,10 @@ class ReportView(ui.View):
     """A view containing the UI elements and logic for reporting a user or message."""
 
     def __init__(
-        self,
+        self: "Report",
         reported_message: Message | None = None,
         user: User | Member | None = None,
-    ):
+    ) -> None:
         """Create a new ReportView instance tied to a specific message or user."""
         super().__init__()
 
@@ -60,14 +60,14 @@ class ReportView(ui.View):
         max_values=len(RULES),
         options=RULES_OPTIONS,
     )
-    async def rule_violations_select(self, select: ui.Select, interaction: Interaction):
+    async def rule_violations_select(self: "Report", select: ui.Select, interaction: Interaction) -> None:
         """Present a rule violation selection menu for the user."""
         assert isinstance(interaction.response, InteractionResponse)
         self.rule_violations = [int(val) for val in select.values if isinstance(val, str) and val.isdigit()]
         await interaction.response.defer()
 
     @ui.button(label="Report", style=ButtonStyle.red)
-    async def report(self, _button: ui.Button, interaction: Interaction):
+    async def report(self: "Report", _button: ui.Button, interaction: Interaction) -> None:
         """Report the user or message upon press."""
         assert interaction.user is not None
         assert isinstance(interaction.response, InteractionResponse)
@@ -128,16 +128,18 @@ class ReportView(ui.View):
 class Report(Cog):
     """A cog containing commands for reporting users and messages."""
 
+    @staticmethod
     @message_command(name="Report message")
-    async def report_message(self, ctx: ApplicationContext, message: Message):
+    async def report_message(ctx: ApplicationContext, message: Message) -> None:
         """Present a report view for the given message."""
         await ctx.send_response(
             view=ReportView(reported_message=message),
             ephemeral=True,
         )
 
+    @staticmethod
     @user_command(name="Report user")
-    async def report_user(self, ctx: ApplicationContext, user: User):
+    async def report_user(ctx: ApplicationContext, user: User) -> None:
         """Present a report view for the given user."""
         await ctx.send_response(
             view=ReportView(user=user),
@@ -145,6 +147,6 @@ class Report(Cog):
         )
 
 
-def setup(bot: Bot):
+def setup(bot: Bot) -> None:
     """Set up the Report cog."""
     bot.add_cog(Report(bot))

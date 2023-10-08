@@ -1,4 +1,5 @@
 """The entrypoint for the bot."""
+import sys
 from logging import getLogger
 from os import getenv
 from pathlib import Path
@@ -25,7 +26,7 @@ COGS: list[str] = [
 
 
 @bot.event
-async def on_ready():
+async def on_ready() -> None:
     """
     Express the readiness of the bot to receive events and commands.
 
@@ -58,7 +59,7 @@ if __name__ == "__main__":
 
     if (exit_code := result[2]) != 0:
         logger.debug(f"[bold red]Exited with exit code [bright_red]{exit_code}[/][/]")
-        exit(exit_code)
+        sys.exit(exit_code)
 
     for cog in COGS:
         logger.info(f"[cyan]Loading the [bright_cyan]{cog.replace('_', ' ').title()}[/] cog...[/]")
