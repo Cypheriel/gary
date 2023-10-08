@@ -127,7 +127,7 @@ class ReportView(ui.View):
 class Report(Cog):
     """A cog containing commands for reporting users and messages."""
 
-    @message_command()
+    @message_command(name="Report message")
     async def report_message(self, ctx: ApplicationContext, message: Message):
         """Present a report view for the given message."""
         await ctx.send_response(
@@ -135,7 +135,7 @@ class Report(Cog):
             ephemeral=True,
         )
 
-    @user_command()
+    @user_command(name="Report user")
     async def report_user(self, ctx: ApplicationContext, user: User):
         """Present a report view for the given user."""
         await ctx.send_response(

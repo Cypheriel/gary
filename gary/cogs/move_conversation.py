@@ -124,7 +124,7 @@ class MoveConversationMenu(ui.View):
 class MoveConversations(Cog):
     """A cog containing context menu command for moving conversations."""
 
-    @message_command()
+    @message_command(name="Move conversation")
     async def move_conversation(self, ctx: ApplicationContext, message: Message):
         """Present the move conversation menu to the user."""
         if message.author == ctx.bot.user:
