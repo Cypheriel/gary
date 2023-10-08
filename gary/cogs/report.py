@@ -142,4 +142,3 @@ class Report(Cog):
             view=ReportView(user=user),
             ephemeral=True,
         )
-        await ctx.send_response(view=ReportView(user=user), ephemeral=True)
