@@ -1,13 +1,10 @@
 """The entrypoint for the bot."""
-import sys
 from logging import getLogger
 from os import getenv
-from pathlib import Path
 
 from discord import Intents
 from discord.ext.commands import Bot
 from dotenv import load_dotenv
-from mypy import api as mypy_api
 
 from gary.logging import setup_logging
 
@@ -48,19 +45,6 @@ async def on_ready() -> None:
 
 
 if __name__ == "__main__":
-    logger.info("Running type-checker...")
-    result = mypy_api.run([str(Path(__file__).parent)])
-
-    if stdout := result[0]:
-        logger.info(f"[yellow]Type-checking report[/]:\n{stdout.strip()}")
-
-    if stderr := result[1]:
-        logger.error(stderr)
-
-    if (exit_code := result[2]) != 0:
-        logger.debug(f"[bold red]Exited with exit code [bright_red]{exit_code}[/][/]")
-        sys.exit(exit_code)
-
     for cog in COGS:
         logger.info(f"[cyan]Loading the [bright_cyan]{cog.replace('_', ' ').title()}[/] cog...[/]")
         bot.load_extension(f"gary.cogs.{cog}")

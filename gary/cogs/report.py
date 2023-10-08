@@ -39,7 +39,7 @@ class ReportView(ui.View):
     """A view containing the UI elements and logic for reporting a user or message."""
 
     def __init__(
-        self: "Report",
+        self: "ReportView",
         reported_message: Message | None = None,
         user: User | Member | None = None,
     ) -> None:
@@ -60,14 +60,14 @@ class ReportView(ui.View):
         max_values=len(RULES),
         options=RULES_OPTIONS,
     )
-    async def rule_violations_select(self: "Report", select: ui.Select, interaction: Interaction) -> None:
+    async def rule_violations_select(self: "ReportView", select: ui.Select, interaction: Interaction) -> None:
         """Present a rule violation selection menu for the user."""
         assert isinstance(interaction.response, InteractionResponse)
         self.rule_violations = [int(val) for val in select.values if isinstance(val, str) and val.isdigit()]
         await interaction.response.defer()
 
     @ui.button(label="Report", style=ButtonStyle.red)
-    async def report(self: "Report", _button: ui.Button, interaction: Interaction) -> None:
+    async def report(self: "ReportView", _button: ui.Button, interaction: Interaction) -> None:
         """Report the user or message upon press."""
         assert interaction.user is not None
         assert isinstance(interaction.response, InteractionResponse)

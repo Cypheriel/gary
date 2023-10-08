@@ -5,6 +5,9 @@ from discord import (
     Cog,
     Message,
     SlashCommandGroup,
+    TextChannel,
+    Thread,
+    VoiceChannel,
     default_permissions,
     message_command,
 )
@@ -69,22 +72,28 @@ class PrecisionMassActions(Cog):
             await ctx.respond("Please select two messages from the same channel!", ephemeral=True)
             return
 
+        assert isinstance(positions[0].channel, TextChannel | VoiceChannel | Thread)
+        channel: TextChannel | VoiceChannel | Thread = positions[0].channel
+
         if positions[0].created_at > positions[1].created_at:
             positions[0], positions[1] = positions[1], positions[0]
 
-        messages = (
-            await ctx.channel.history(
-                after=positions[0],
-                before=positions[1],
-            ).flatten()
-            + positions
-        )
+        message_history = await channel.history(
+            after=positions[0],
+            before=positions[1],
+        ).flatten()
+
+        messages: list[Message] = [
+            positions[0],
+            *[message for message in message_history if message is not None],
+            positions[1],
+        ]
 
         if len(messages) > 1:
             await ctx.respond("Please select more than one message!", ephemeral=True)
             return
 
-        await ctx.channel.delete_messages(messages)
+        await channel.delete_messages(messages)
 
         await ctx.respond(f"✅ Deleted {len(messages)} messages.", ephemeral=True)
 
