@@ -128,18 +128,16 @@ class ReportView(ui.View):
 class Report(Cog):
     """A cog containing commands for reporting users and messages."""
 
-    @staticmethod
     @message_command(name="Report message")
-    async def report_message(ctx: ApplicationContext, message: Message) -> None:
+    async def report_message(self: "Report", ctx: ApplicationContext, message: Message) -> None:
         """Present a report view for the given message."""
         await ctx.send_response(
             view=ReportView(reported_message=message),
             ephemeral=True,
         )
 
-    @staticmethod
     @user_command(name="Report user")
-    async def report_user(ctx: ApplicationContext, user: User) -> None:
+    async def report_user(self: "Report", ctx: ApplicationContext, user: User) -> None:
         """Present a report view for the given user."""
         await ctx.send_response(
             view=ReportView(user=user),

@@ -6,9 +6,8 @@ from discord.ext.commands import Cog
 class Ping(Cog):
     """Cog containing the ping command."""
 
-    @staticmethod
     @slash_command()
-    async def ping(ctx: ApplicationContext) -> None:
+    async def ping(self: "Ping", ctx: ApplicationContext) -> None:
         """Report the bot's latency."""
         latency = round(ctx.bot.latency * 1000, 2)
         await ctx.trigger_typing()

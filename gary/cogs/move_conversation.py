@@ -188,9 +188,8 @@ class MoveConversationMenu(ui.View):
 class MoveConversations(Cog):
     """A cog containing context menu command for moving conversations."""
 
-    @staticmethod
     @message_command(name="Move conversation")
-    async def move_conversation(ctx: ApplicationContext, message: Message) -> None:
+    async def move_conversation(self: "MoveConversations", ctx: ApplicationContext, message: Message) -> None:
         """Present the move conversation menu to the user."""
         if message.author == ctx.bot.user:
             await ctx.respond(content="I can't move my own messages!", ephemeral=True)
