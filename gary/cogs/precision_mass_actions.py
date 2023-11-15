@@ -89,7 +89,7 @@ class PrecisionMassActions(Cog):
             positions[1],
         ]
 
-        if len(messages) > 1:
+        if len(messages) in (0, 1):
             await ctx.respond("Please select more than one message!", ephemeral=True)
             return
 
