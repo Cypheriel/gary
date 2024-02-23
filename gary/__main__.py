@@ -1,4 +1,5 @@
 """The entrypoint for the bot."""
+from importlib import resources
 from logging import getLogger
 from os import getenv
 
@@ -15,10 +16,9 @@ logger = getLogger("gary")
 bot = Bot(intents=Intents.all())
 
 COGS: list[str] = [
-    "ping",
-    "move_conversation",
-    "report",
-    "precision_mass_actions",
+    dir.name[:-3]
+    for dir in (resources.files(__package__) / "cogs").iterdir()
+    if not dir.name.startswith("_") and dir.name.endswith(".py")
 ]
 
 
