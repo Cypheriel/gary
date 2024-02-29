@@ -43,6 +43,10 @@ async def on_ready() -> None:
 
     logger.info("[bold green]Bot is ready![/]")
 
+    if (status_channel_id := getenv("BOT_STATUS_CHANNEL_ID")) is not None:
+        bot_status_channel = bot.get_channel(int(status_channel_id))
+        await bot_status_channel.send("Howdy! I'm online and ready. Any reminder timers have been reset.")
+
 
 if __name__ == "__main__":
     for cog in COGS:
