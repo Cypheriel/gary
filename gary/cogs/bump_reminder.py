@@ -1,5 +1,5 @@
 import asyncio
-from datetime import timedelta, datetime, tzinfo
+from datetime import timedelta, datetime
 
 from discord import Message, Bot, slash_command, ApplicationContext, TextChannel
 from discord.ext.commands import Cog
@@ -8,10 +8,7 @@ DISBOARD_ID = 302050872383242240
 
 
 async def bump_reminder(channel: TextChannel) -> None:
-    await channel.send(
-        f"Howdy, <@&1210376856264773672>! It's time to bump the server!\n"
-        "</bump:947088344167366698>"
-    )
+    await channel.send(f"Howdy, <@&1210376856264773672>! It's time to bump the server!\n" "</bump:947088344167366698>")
 
 
 class BumpReminder(Cog):
@@ -21,8 +18,15 @@ class BumpReminder(Cog):
 
     @Cog.listener()
     async def on_message(self, message: Message) -> None:
-        if message.author.id == DISBOARD_ID and len(message.embeds) == 1 and "Bump done!" in message.embeds[0].description:
-            if self.last_bump is not None and (message.created_at - self.last_bump).total_seconds() < timedelta(hours=2).total_seconds():
+        if (
+            message.author.id == DISBOARD_ID
+            and len(message.embeds) == 1
+            and "Bump done!" in message.embeds[0].description
+        ):
+            if (
+                self.last_bump is not None
+                and (message.created_at - self.last_bump).total_seconds() < timedelta(hours=2).total_seconds()
+            ):
                 await message.channel.send("Whoa! Double bump!")
                 return
 

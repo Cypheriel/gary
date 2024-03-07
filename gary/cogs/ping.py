@@ -41,31 +41,16 @@ class Ping(Cog):
                 fields=[
                     EmbedField(
                         name=f"Passes{f' ({i}/{PASSES})' if i != PASSES else ''}",
-                        value=", ".join(f"{latency:.2f}ms" for latency in results)
+                        value=", ".join(f"{latency:.2f}ms" for latency in results),
                     ),
                     EmbedField(
                         name="Configured Delay",
                         value=f"{PASS_DELAY:.2f}s",
                     ),
-                    EmbedField(
-                        name="Average",
-                        value=f"{sum(results) / len(results):.2f}ms",
-                        inline=True
-                    ),
-                    EmbedField(
-                        name="Minimum",
-                        value=f"{min(results):.2f}ms",
-                        inline=True
-                    ),
-                    EmbedField(
-                        name="Maximum",
-                        value=f"{max(results):.2f}ms",
-                        inline=True
-                    ),
-                    EmbedField(
-                        name="Reception Delta",
-                        value=f"{delta_ms:.2f}ms{' ⚠' if delta_ms < 0 else ''}"
-                    )
+                    EmbedField(name="Average", value=f"{sum(results) / len(results):.2f}ms", inline=True),
+                    EmbedField(name="Minimum", value=f"{min(results):.2f}ms", inline=True),
+                    EmbedField(name="Maximum", value=f"{max(results):.2f}ms", inline=True),
+                    EmbedField(name="Reception Delta", value=f"{delta_ms:.2f}ms{' ⚠' if delta_ms < 0 else ''}"),
                 ],
                 color=discord.Color.blurple() if complete else discord.Color.gold(),
             )
