@@ -1,6 +1,6 @@
 #  Copyright (c) 2024  Cypheriel
 import asyncio
-from datetime import timedelta, datetime
+from datetime import timedelta, datetime, timezone
 
 from discord import Message, Bot, slash_command, ApplicationContext, TextChannel, Embed, EmbedField
 from discord.ext.commands import Cog
@@ -15,7 +15,7 @@ async def bump_reminder(channel: TextChannel) -> None:
 class BumpReminder(Cog):
     def __init__(self, bot: Bot):
         self.bot = bot
-        self.last_bump: datetime = datetime.min
+        self.last_bump: datetime = datetime.min.astimezone(timezone.utc)
 
     @Cog.listener()
     async def on_message(self, message: Message) -> None:
