@@ -1,7 +1,7 @@
 import asyncio
 from datetime import timedelta, datetime
 
-from discord import Message, Bot, slash_command, ApplicationContext, TextChannel
+from discord import Message, Bot, slash_command, ApplicationContext, TextChannel, Embed, EmbedField
 from discord.ext.commands import Cog
 
 DISBOARD_ID = 302050872383242240
@@ -25,16 +25,26 @@ class BumpReminder(Cog):
         ):
             return
 
-        if (
-            self.last_bump is not None
-            and (message.created_at - self.last_bump).total_seconds() < timedelta(hours=2).total_seconds()
-        ):
-            await message.channel.send("Whoa! Double bump!")
+        time_since_last_bump = message.created_at - self.last_bump
+        target_offset = time_since_last_bump - timedelta(hours=2)
+
+        if self.last_bump is not None and target_offset.total_seconds() < 0:
+            await message.channel.send("Whoa! Double bump! ✨")
             return
 
         self.last_bump = message.created_at
+        next_reminder = self.last_bump + timedelta(hours=2)
 
-        await message.channel.send("Thanks for the bump! I'll remind you to bump again in 2 hours.")
+        await message.channel.send(
+            embed=Embed(
+                description=f"Thank you for bumping! I will remind you to bump again <t:{int(next_reminder.timestamp())}:R>.",
+                fields=[
+                    EmbedField(name="Offset", value=f"{target_offset}", inline=True),
+                    EmbedField(name="API Latency", value=f"{self.bot.latency * 1000:.2f}ms", inline=True),
+                ],
+                color=0x90EEBF
+            )
+        )
 
         await asyncio.sleep(2 * 60 * 60)  # 2 hours
         await bump_reminder(message.channel)
