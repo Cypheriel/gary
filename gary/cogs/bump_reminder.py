@@ -15,7 +15,7 @@ async def bump_reminder(channel: TextChannel) -> None:
 class BumpReminder(Cog):
     def __init__(self, bot: Bot):
         self.bot = bot
-        self.last_bump: datetime | None = None
+        self.last_bump: datetime = datetime.min
 
     @Cog.listener()
     async def on_message(self, message: Message) -> None:
@@ -29,7 +29,7 @@ class BumpReminder(Cog):
         time_since_last_bump = message.created_at - self.last_bump
         target_offset = time_since_last_bump - timedelta(hours=2)
 
-        if self.last_bump is not None and target_offset.total_seconds() < 0:
+        if self.last_bump != datetime.min and target_offset.total_seconds() < 0:
             await message.channel.send("Whoa! Double bump! ✨")
             return
 
