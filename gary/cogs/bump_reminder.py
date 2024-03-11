@@ -25,6 +25,8 @@ class BumpReminder(Cog):
             message.author.id != DISBOARD_ID
             or len(message.embeds) != 1
             or "Bump done!" not in message.embeds[0].description
+            or message.interaction is None
+            or message.interaction.name != "bump"
         ):
             return
 
