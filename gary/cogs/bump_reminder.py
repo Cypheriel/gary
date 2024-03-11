@@ -8,7 +8,7 @@ DISBOARD_ID = 302050872383242240
 
 
 async def bump_reminder(channel: TextChannel) -> None:
-    await channel.send(f"Howdy, <@&1210376856264773672>! It's time to bump the server!\n" "</bump:947088344167366698>")
+    await channel.send(f"Howdy, <@&1210376856264773672>! It's time to bump the server!\n</bump:947088344167366698>")
 
 
 class BumpReminder(Cog):
