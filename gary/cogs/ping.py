@@ -1,4 +1,5 @@
 """Module containing the Ping cog."""
+#  Copyright (c) 2024  Cypheriel
 import asyncio
 import math
 from datetime import datetime, timezone

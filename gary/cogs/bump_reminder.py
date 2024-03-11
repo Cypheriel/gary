@@ -1,3 +1,4 @@
+#  Copyright (c) 2024  Cypheriel
 import asyncio
 from datetime import timedelta, datetime
 

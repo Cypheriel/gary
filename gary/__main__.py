@@ -1,4 +1,5 @@
 """The entrypoint for the bot."""
+#  Copyright (c) 2024  Cypheriel
 from importlib import resources
 from logging import getLogger
 from os import getenv

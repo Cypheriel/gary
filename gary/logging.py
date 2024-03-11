@@ -1,4 +1,5 @@
 """Module responsible for initialising logging for the bot."""
+#  Copyright (c) 2024  Cypheriel
 import logging
 from os import environ
 

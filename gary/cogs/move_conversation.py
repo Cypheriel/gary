@@ -1,5 +1,6 @@
 """Module containing the MoveConversations cog and related functionality."""
 
+#  Copyright (c) 2024  Cypheriel
 from discord import (
     ApplicationContext,
     Bot,
