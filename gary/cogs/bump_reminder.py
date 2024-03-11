@@ -15,7 +15,7 @@ async def bump_reminder(channel: TextChannel) -> None:
 class BumpReminder(Cog):
     def __init__(self, bot: Bot):
         self.bot = bot
-        self.last_bump: datetime = datetime.min.astimezone(timezone.utc)
+        self.last_bump: datetime = datetime.fromtimestamp(0).astimezone(timezone.utc)
 
     @Cog.listener()
     async def on_message(self, message: Message) -> None:
