@@ -19,22 +19,25 @@ class BumpReminder(Cog):
     @Cog.listener()
     async def on_message(self, message: Message) -> None:
         if (
-            message.author.id == DISBOARD_ID
-            and len(message.embeds) == 1
-            and "Bump done!" in message.embeds[0].description
+            message.author.id != DISBOARD_ID
+            or len(message.embeds) != 1
+            or "Bump done!" not in message.embeds[0].description
         ):
-            if (
-                self.last_bump is not None
-                and (message.created_at - self.last_bump).total_seconds() < timedelta(hours=2).total_seconds()
-            ):
-                await message.channel.send("Whoa! Double bump!")
-                return
+            return
 
-            await message.channel.send("Thanks for the bump! I'll remind you to bump again in 2 hours.")
-            self.last_bump = message.created_at
+        if (
+            self.last_bump is not None
+            and (message.created_at - self.last_bump).total_seconds() < timedelta(hours=2).total_seconds()
+        ):
+            await message.channel.send("Whoa! Double bump!")
+            return
 
-            await asyncio.sleep(2 * 60 * 60)  # 2 hours
-            await bump_reminder(message.channel)
+        self.last_bump = message.created_at
+
+        await message.channel.send("Thanks for the bump! I'll remind you to bump again in 2 hours.")
+
+        await asyncio.sleep(2 * 60 * 60)  # 2 hours
+        await bump_reminder(message.channel)
 
     @slash_command()
     async def bump_remind(self, ctx: ApplicationContext, hours: int = 0, minutes: int = 0, seconds: int = 0):
