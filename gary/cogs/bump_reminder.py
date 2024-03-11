@@ -40,7 +40,7 @@ class BumpReminder(Cog):
         self.last_bump = message.created_at
         self.has_bumped = True
 
-        disboard_latency = discord.Object(message.interaction.id).created_at - message.created_at
+        disboard_latency = message.created_at - discord.Object(message.interaction.id).created_at
         next_reminder = self.last_bump + timedelta(hours=2)
 
         await message.reply(
