@@ -17,9 +17,9 @@ logger = getLogger("gary")
 bot = Bot(intents=Intents.all())
 
 COGS: list[str] = [
-    dir.name[:-3]
-    for dir in (resources.files(__package__) / "cogs").iterdir()
-    if not dir.name.startswith("_") and dir.name.endswith(".py")
+    i.name[:-3]
+    for i in (resources.files(__package__) / "cogs").iterdir()
+    if not i.name.startswith("_") and i.name.endswith(".py")
 ]
 
 
