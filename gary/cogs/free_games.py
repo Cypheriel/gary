@@ -1,12 +1,14 @@
 #  Copyright (c) 2024  Cypheriel
 import asyncio
+import logging
 import re
 from datetime import datetime, timezone
 
 from discord import Message, Bot, NotFound, DeletedReferencedMessage
 from discord.ext.commands import Cog
 
-timestamp_regex = re.compile(r"t:(\d+):d")
+timestamp_regex = re.compile(r"<t:(\d+):d>")
+logger = logging.getLogger(__name__)
 
 
 class FreeGames(Cog):
@@ -18,6 +20,8 @@ class FreeGames(Cog):
     async def on_message(self, message: Message) -> None:
         if message.channel.id != 1236159339388211260 or message.author.id == self.bot.user.id:
             return
+
+        logger.debug(f"Message received in #free-games: {message.content}")
 
         await asyncio.sleep(0.250)
 
@@ -52,12 +56,13 @@ class FreeGames(Cog):
         await asyncio.gather(*tasks)
 
     async def create_expiring_message(self, message: Message):
-        if message.author.id == self.bot.user.id:
+        if message.author.id == self.bot.user.id or message.content:
             return
 
         latest_expiration_time = None
 
         for embed in message.embeds:
+            logger.debug(f"Checking embed: {embed.description}")
             match = timestamp_regex.search(embed.description)
             if not match:
                 break
@@ -70,6 +75,8 @@ class FreeGames(Cog):
         if latest_expiration_time is None or latest_expiration_time < 0:
             await message.delete(reason="Free game message does not contain a valid expiration time.")
             return
+
+        logger.debug(f"Message will expire in {latest_expiration_time} seconds.")
 
         return asyncio.create_task(self.sleep_and_delete_message(message, latest_expiration_time))
 
