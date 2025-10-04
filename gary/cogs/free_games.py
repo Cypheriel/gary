@@ -73,6 +73,7 @@ class FreeGames(Cog):
                 latest_expiration_time = time_until_expiration
 
         if latest_expiration_time is None or latest_expiration_time < 0:
+            logger.debug(f"Expiration time invalid: {latest_expiration_time}")
             await message.delete(reason="Free game message does not contain a valid expiration time.")
             return
 
@@ -97,6 +98,7 @@ class FreeGames(Cog):
 
     async def sleep_and_delete_message(self, message: Message, time_to_sleep: int):
         await asyncio.sleep(time_to_sleep)
+        logger.debug(f"Free game has expired: {message.embeds[0].title}")
         try:
             await message.delete(reason="Free game expired.")
             for ping_message in list(self.ping_messages):
