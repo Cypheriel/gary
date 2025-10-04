@@ -61,9 +61,9 @@ class FreeGames(Cog):
 
         latest_expiration_time = None
 
-        for embed in message.embeds:
-            logger.debug(f"Checking embed: {embed.description}")
-            match = timestamp_regex.search(embed.description)
+        for component in message.components:
+            logger.debug(f"Checking embed: {component.to_dict()}")
+            match = timestamp_regex.search(str(component.to_dict()))
             if not match:
                 break
 
@@ -98,7 +98,7 @@ class FreeGames(Cog):
 
     async def sleep_and_delete_message(self, message: Message, time_to_sleep: int):
         await asyncio.sleep(time_to_sleep)
-        logger.debug(f"Free game has expired: {message.embeds[0].title}")
+        logger.debug(f"Free game has expired: {message.id}")
         try:
             await message.delete(reason="Free game expired.")
             for ping_message in list(self.ping_messages):
