@@ -12,7 +12,7 @@ def setup_logging() -> None:
     logging.getLogger("discord").setLevel(logging.WARNING)
 
     logging.basicConfig(
-        level=logging.INFO,
+        level=logging.DEBUG,
         format="%(message)s",
         datefmt="[%X]",
         handlers=[
